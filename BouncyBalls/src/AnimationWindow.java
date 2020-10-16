@@ -11,15 +11,20 @@
 
 import java.util.List;
 import java.util.Random;
+
+
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.awt.event.InputMethodListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
 
 
@@ -39,7 +44,7 @@ class AnimationWindow
 
     public static void main(String[] args) {
     	
-    	ColorTemplates templates = new ColorTemplates(); // todo; don't think should be an instance
+    	ColorTemplates templates = new ColorTemplates();
     	currentTemplate = templates.getNextTemplate();
     	initializeBalls();
     	
@@ -91,11 +96,20 @@ class AnimationWindow
             }
         });
         
+       
+        // Closes window
+       frame.addWindowListener(new java.awt.event.WindowAdapter() {
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+        });
+        
         // Display the frame
         
         int frameWidth = 300;
         
         int frameHeight = 300;
+        
         
         frame.setSize(frameWidth, frameHeight);
         
@@ -105,7 +119,7 @@ class AnimationWindow
         
         frame.repaint();
         frame.setVisible(true);
-        
+       
         
         long currentTime = System.currentTimeMillis();
         
@@ -114,7 +128,7 @@ class AnimationWindow
         		move();
         		checkForBounces();
         		//System.out.println("size: " + balls.size());
-        		frame.repaint();
+        		frame.paint(frame.getGraphics());
         		currentTime = System.currentTimeMillis();
         	}
         }
@@ -247,23 +261,28 @@ class AnimationWindow
     
 
     static class CustomPaintComponent extends Component {
+    	
+    	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // Prevents need to resize buffer
+    	BufferedImage  bf = new BufferedImage( screenSize.width, screenSize.height, BufferedImage.TYPE_INT_RGB);
         
         public void paint(Graphics g) {
             
             Graphics2D g2d = (Graphics2D)g;
             
+            Graphics gBuffered = bf.getGraphics();            
             
             int x = 0;
             
             int y = 0;
             
-            int w = getSize().width-1;
+            int w = getSize().width;
             
-            int h = getSize().height-1;
+            int h = getSize().height;
+       
             
             // change background
-            g.setColor(currentTemplate.getBackground());
-            g.fillRect(0, 0, w, h);
+            gBuffered.setColor(currentTemplate.getBackground());
+            gBuffered.fillRect(0, 0, w, h);
             
             //System.out.println("here: " + balls.size());
             for (int i = 0; i < balls.size(); i++) {
@@ -271,14 +290,13 @@ class AnimationWindow
             	Ball b = balls.get(i);
             	x = (int) (b.getPosX() * w);
             	y = (int) (b.getPosY() * h);
-            	int rad = (int) (b.getRadius() * w); // TODO: might get weird if rectangle window
-            	// TODO: think about this, maybe proportional to bigger?
-            	// or keep as int, there are options
-            	g2d.setColor(b.getColor());
-            	//g2d.fillOval(x, y, b.getRadius(), b.getRadius());
-            	g2d.fillOval(x,  y, rad * 2, rad * 2);
+            	int rad = (int) (b.getRadius() * w); 
+            	gBuffered.setColor(b.getColor());
+            	gBuffered.fillOval(x,  y, rad * 2, rad * 2);
         	}
+            g.drawImage(bf,0,0,null);
         }
+        
     }
   
 
