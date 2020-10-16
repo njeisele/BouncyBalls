@@ -1,0 +1,3 @@
+org.eclipse.jdt.core.compiler.complicance=12
+org.eclipse.jdt.core.compiler.source=12
+org.eclipse.jdt.core.codegen.targetPlatform=12

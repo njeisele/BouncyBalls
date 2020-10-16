@@ -1,0 +1,33 @@
+/********************************************************************************/
+/*                                                                              */
+/*              AnimationWindow.java                                            */
+/*                                                                              */
+/*      description of class                                                    */
+/*                                                                              */
+/*      Written by eiseleappes                                                  */
+/*                                                                              */
+/********************************************************************************/
+
+
+import java.util.List;
+import java.util.ArrayList;
+
+
+
+
+class AnimationWindow
+{
+    
+    List<Ball> balls = new ArrayList<Ball>();
+
+
+
+
+
+}       // end of class AnimationWindow
+    
+
+
+
+
+/* end of AnimationWindow.java */
